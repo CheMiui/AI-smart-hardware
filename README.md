@@ -1,4 +1,3 @@
-# AI-smart-hardware
 # AI 老年陪伴智能硬件 · 售前解决方案复盘
 
  **[在线预览 (Live Demo)](https://chemiui.github.io/AI-smart-hardware/)** 
