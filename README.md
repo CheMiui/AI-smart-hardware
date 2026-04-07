@@ -1,7 +1,7 @@
 # AI-smart-hardware
 # AI 老年陪伴智能硬件 · 售前解决方案复盘
 
-🌐 **[在线预览 (Live Demo)](https://chemiui.github.io/AI-smart-hardware/)** （(https://chemiui.github.io/AI-smart-hardware/)）
+🌐 **[在线预览 (Live Demo)](https://chemiui.github.io/AI-smart-hardware/)** 
 
 ## 📖 项目简介
 该项目为百度智能云针对某智能硬件初创公司提供的“云端多模态实时互动方案”实战复盘。本单页作品集完整拆解了该项目从线下初访、需求映射、架构选型到 POC 测试启动的售前全链路，并系统性地沉淀了将底层技术术语转化为商业与场景语言的核心策略。
