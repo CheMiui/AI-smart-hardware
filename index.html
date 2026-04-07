@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SA Portfolio · AI 老年陪伴硬件项目复盘</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #07090f;
+  --bg1:   #0b0e18;
+  --bg2:   #10141f;
+  --sf:    #141928;
+  --sf2:   #1a2135;
+  --sf3:   #1f2740;
+  --ac:    #4f8ef7;
+  --ac2:   #7bb0ff;
+  --ac-lo: rgba(79,142,247,.13);
+  --ac-b:  rgba(79,142,247,.28);
+  --cy:    #2dd4bf;
+  --cy-lo: rgba(45,212,191,.12);
+  --or:    #fb923c;
+  --or-lo: rgba(251,146,60,.12);
+  --gr:    #34d399;
+  --gr-lo: rgba(52,211,153,.1);
+  --pu:    #a78bfa;
+  --pu-lo: rgba(167,139,250,.1);
+  --ye:    #fbbf24;
+  --tx:    #f0f4ff;
+  --tx2:   #94a3cc;
+  --tx3:   #4a5680;
+  --bd:    rgba(255,255,255,.065);
+  --bd2:   rgba(255,255,255,.12);
+  --r3:    6px;
+  --r4:    9px;
+  --r5:    12px;
+  --r6:    16px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{
+  background:var(--bg);color:var(--tx);
+  font-family:'Space Grotesk','Noto Sans SC',sans-serif;
+  font-weight:400;overflow-x:hidden;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--tx3);border-radius:3px;}
+
+.label{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ac);font-weight:600;
+}
+.label::before{content:'';width:20px;height:2px;background:linear-gradient(90deg,var(--ac),var(--cy));flex-shrink:0;border-radius:2px;}
+
+h2.sec-title{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:clamp(18px,2.4vw,24px);line-height:1.2;
+  letter-spacing:-.02em;margin-top:10px;color:var(--tx);
+}
+.body-copy{font-size:14px;line-height:1.9;color:var(--tx2);font-family:'Noto Sans SC',sans-serif;font-weight:300;}
+.body-copy strong{color:var(--tx);font-weight:500;}
+.body-copy+.body-copy{margin-top:14px;}
+
+nav{
+  position:fixed;inset:0 0 auto;z-index:300;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 56px;height:58px;
+  background:rgba(7,9,15,.92);backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--bd);
+}
+.nav-back{display:flex;align-items:center;gap:10px;color:var(--tx2);font-size:12px;text-decoration:none;letter-spacing:.06em;transition:color .2s;font-weight:500;}
+.nav-back:hover{color:var(--ac);}
+.nav-crumb{font-size:11px;color:var(--tx3);letter-spacing:.05em;}
+.nav-crumb span{color:var(--tx2);}
+.nav-tag{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ac);padding:4px 10px;border:1px solid var(--ac-b);border-radius:4px;background:var(--ac-lo);}
+
+.hero{
+  padding:120px 56px 72px;
+  border-bottom:1px solid var(--bd);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 800px 500px at 80% -10%,rgba(79,142,247,.07) 0%,transparent 60%),
+    radial-gradient(ellipse 400px 300px at 10% 80%,rgba(45,212,191,.05) 0%,transparent 60%);
+  pointer-events:none;
+}
+.hero-tags{display:flex;gap:8px;margin-bottom:30px;flex-wrap:wrap;}
+.htag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;border-radius:5px;font-weight:600;}
+.htag-a{color:var(--cy);background:var(--cy-lo);border:1px solid rgba(45,212,191,.25);}
+.htag-b{color:var(--gr);background:var(--gr-lo);border:1px solid rgba(52,211,153,.25);}
+.htag-c{color:var(--tx3);background:rgba(255,255,255,.04);border:1px solid var(--bd);}
+
+h1.hero-h{
+  font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:clamp(42px,5.8vw,78px);line-height:.98;
+  letter-spacing:-.035em;margin-bottom:8px;color:var(--tx);
+}
+h1.hero-h .dim{color:var(--tx3);}
+.hero-sub{font-size:clamp(13px,1.5vw,17px);font-weight:500;color:var(--ac2);letter-spacing:-.005em;margin-bottom:24px;}
+.hero-desc{font-size:15px;line-height:1.85;color:var(--tx2);max-width:600px;font-family:'Noto Sans SC',sans-serif;font-weight:300;margin-bottom:52px;}
+
+.metrics{display:flex;width:fit-content;border:1px solid var(--bd2);border-radius:var(--r5);overflow:hidden;background:var(--sf);}
+.metric{padding:16px 32px;border-right:1px solid var(--bd);}
+.metric:last-child{border-right:none;}
+.metric-val{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;line-height:1;}
+.metric-val.blue{color:var(--ac);}
+.metric-val.cyan{color:var(--cy);}
+.metric-val.green{color:var(--gr);}
+.metric-val.orange{color:var(--or);}
+.metric-lbl{font-size:10px;color:var(--tx3);letter-spacing:.08em;text-transform:uppercase;margin-top:5px;font-weight:500;}
+
+.page-grid{display:grid;grid-template-columns:1fr;}
+main{padding:64px 48px 88px 56px;}
+
+
+.sec{margin-bottom:72px;}
+.sec-head{margin-bottom:22px;}
+.hr{height:1px;background:linear-gradient(90deg,transparent,var(--bd2),transparent);margin:52px 0;}
+
+.context-split{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:22px;}
+.ctx-card{background:var(--sf);padding:22px 24px;transition:background .2s;border-radius:0;}
+.ctx-card:hover{background:var(--sf2);}
+.ctx-card-label{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-bottom:10px;}
+.ctx-card-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;line-height:1.3;margin-bottom:9px;color:var(--tx);}
+.ctx-card-body{font-size:12.5px;color:var(--tx2);line-height:1.75;font-family:'Noto Sans SC',sans-serif;}
+
+.insight{margin-top:18px;padding:18px 22px;border-left:2px solid var(--cy);background:linear-gradient(90deg,rgba(45,212,191,.06),transparent);border-radius:0 var(--r3) var(--r3) 0;}
+.insight-text{font-size:13px;color:var(--cy);line-height:1.8;font-family:'Noto Serif SC',serif;font-style:italic;}
+.insight-text strong{color:var(--tx);font-style:normal;}
+
+.problem-grid{display:flex;flex-direction:column;gap:2px;margin-top:4px;}
+.prob-row{display:grid;grid-template-columns:54px 1fr 110px;background:var(--sf);transition:background .2s;align-items:start;}
+.prob-row:hover{background:var(--sf2);}
+.prob-num{padding:20px 0;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--tx3);border-right:1px solid var(--bd);}
+.prob-body{padding:17px 20px;}
+.prob-title{font-size:13.5px;font-weight:600;margin-bottom:5px;color:var(--tx);line-height:1.3;}
+.prob-desc{font-size:12px;color:var(--tx2);line-height:1.68;font-family:'Noto Sans SC',sans-serif;}
+.prob-note{font-size:11px;color:var(--cy);margin-top:8px;line-height:1.6;padding-top:8px;border-top:1px solid rgba(45,212,191,.12);}
+.prob-meta{padding:17px 14px;border-left:1px solid var(--bd);display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.prob-type{font-size:10px;padding:3px 9px;border-radius:4px;font-weight:600;letter-spacing:.04em;white-space:nowrap;}
+.type-hard{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.22);}
+.type-soft{background:rgba(251,146,60,.1);color:#fb923c;border:1px solid rgba(251,146,60,.22);}
+.type-biz{background:rgba(167,139,250,.1);color:#a78bfa;border:1px solid rgba(167,139,250,.22);}
+
+/* ─── ARCH DIAGRAM ─────────────────────────────── */
+.arch-diagram-outer{margin-top:24px;border:1px solid var(--bd2);border-radius:var(--r6);overflow:hidden;background:var(--sf);}
+.arch-diagram-header{padding:12px 20px;background:var(--sf2);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;}
+.arch-diagram-title{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;}
+.arch-diagram-note{font-size:10px;color:var(--tx3);font-style:italic;}
+.arch-canvas{padding:28px 24px 20px;overflow-x:auto;-webkit-overflow-scrolling:touch;position:relative;}
+#arch-svg{display:block;min-width:680px;}
+
+/* Node tooltip */
+.arch-tooltip{
+  display:none;position:absolute;z-index:200;
+  width:260px;background:var(--bg2);border:1px solid var(--bd2);
+  border-radius:var(--r4);padding:15px 17px;
+  box-shadow:0 16px 48px rgba(0,0,0,.85);pointer-events:none;
+  top:calc(100% + 12px);
+}
+.arch-tooltip::before{
+  content:'';position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-bottom:7px solid var(--bg2);
+}
+.arch-tooltip.upward{
+  top:auto;bottom:calc(100% + 12px);
+  box-shadow:0 -8px 48px rgba(0,0,0,.85);
+}
+.arch-tooltip.upward::before{display:none;}
+.arch-tooltip.upward::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-top:7px solid var(--bg2);
+}
+.arch-tooltip.visible{display:block;}
+.att-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:9px;}
+.att-title{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:7px;line-height:1.3;}
+.att-tech{font-size:11px;color:var(--cy);margin-bottom:8px;font-weight:600;letter-spacing:.03em;}
+.att-body{font-size:11.5px;color:var(--tx2);line-height:1.72;font-family:'Noto Sans SC',sans-serif;}
+.att-biz{margin-top:10px;padding-top:9px;border-top:1px solid rgba(45,212,191,.15);font-size:11px;color:var(--gr);line-height:1.6;font-family:'Noto Sans SC',sans-serif;}
+.att-biz-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gr);font-weight:700;margin-bottom:3px;}
+
+/* Decision cards */
+.decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:22px;}
+.dec-card{background:var(--sf);padding:22px 24px;transition:background .2s;position:relative;overflow:hidden;}
+.dec-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ac),var(--cy));transform:scaleX(0);transform-origin:left;transition:transform .4s ease;}
+.dec-card:hover{background:var(--sf2);}
+.dec-card:hover::before{transform:scaleX(1);}
+.dec-card.hl{background:rgba(251,146,60,.04);}
+.dec-card.hl::before{background:linear-gradient(90deg,var(--or),var(--ye));}
+.dec-q{font-size:10px;color:var(--ac);letter-spacing:.07em;margin-bottom:8px;text-transform:uppercase;font-weight:600;}
+.dec-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--tx);margin-bottom:9px;line-height:1.3;}
+.dec-body{font-size:12px;color:var(--tx2);line-height:1.75;font-family:'Noto Sans SC',sans-serif;}
+.dec-body strong{color:var(--tx);}
+.dec-quote{margin-top:11px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);font-size:11px;font-style:italic;color:var(--ac2);line-height:1.65;}
+.dec-card.hl .dec-quote{color:var(--or);}
+
+/* match table */
+.match-wrap{margin-top:22px;border:1px solid var(--bd);border-radius:var(--r5);overflow:hidden;}
+.match-table{width:100%;border-collapse:collapse;}
+.match-table thead tr{background:var(--sf2);}
+.match-table th{padding:10px 16px;text-align:left;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;}
+.match-table td{padding:13px 16px;border-top:1px solid var(--bd);font-size:12px;color:var(--tx2);line-height:1.6;font-family:'Noto Sans SC',sans-serif;vertical-align:top;}
+.match-table tbody tr:hover td{background:rgba(255,255,255,.015);}
+.td-need{color:var(--tx);font-weight:500;}
+.status-dot{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;}
+.sd-g{color:var(--gr);}
+.sd-y{color:var(--ye);}
+.dot-g::before,.dot-y::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;}
+.dot-g::before{background:var(--gr);}
+.dot-y::before{background:var(--ye);}
+
+/* workflow */
+.workflow-outer{margin-top:4px;border:1px solid var(--bd2);border-radius:var(--r6);overflow:hidden;}
+.workflow-header{padding:12px 22px;background:var(--sf2);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;}
+.workflow-header-title{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;}
+.workflow-note{font-size:10px;color:var(--tx3);font-style:italic;}
+.workflow-scroll{overflow-x:auto;padding:34px 30px 260px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;min-height:420px;}
+.wf-track{display:flex;align-items:flex-start;gap:0;min-width:max-content;position:relative;padding-bottom:8px;}
+.wf-arrow{display:flex;align-items:center;margin-top:32px;flex-shrink:0;}
+.wf-arrow-line{width:36px;height:1px;background:var(--bd2);position:relative;flex-shrink:0;}
+.wf-arrow-line::after{content:'';position:absolute;right:-1px;top:-4px;border:4px solid transparent;border-left:7px solid var(--bd2);}
+.wf-node{width:158px;flex-shrink:0;cursor:pointer;position:relative;}
+.wf-node-inner{border:1px solid var(--bd);border-radius:var(--r4);background:var(--sf);padding:15px 16px;transition:border-color .25s,background .25s;}
+.wf-node:hover .wf-node-inner{border-color:var(--ac);background:var(--ac-lo);}
+.wf-node.active .wf-node-inner{border-color:var(--cy);background:var(--cy-lo);}
+.wf-node-step{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--tx3);font-weight:600;margin-bottom:7px;}
+.wf-node-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--tx);line-height:1.25;margin-bottom:5px;}
+.wf-node-sub{font-size:10px;color:var(--tx3);line-height:1.5;}
+.wf-node-badge{display:inline-block;margin-top:8px;font-size:9px;padding:2px 8px;border-radius:3px;font-weight:600;letter-spacing:.05em;}
+.badge-done{background:rgba(52,211,153,.1);color:var(--gr);border:1px solid rgba(52,211,153,.25);}
+.badge-active{background:var(--cy-lo);color:var(--cy);border:1px solid rgba(45,212,191,.3);}
+.badge-next{background:rgba(255,255,255,.04);color:var(--tx3);border:1px solid var(--bd);}
+.wf-tooltip{display:none;position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);width:230px;background:var(--bg2);border:1px solid var(--bd2);border-radius:var(--r4);padding:15px 16px;z-index:100;box-shadow:0 14px 44px rgba(0,0,0,.7);}
+.wf-node:hover .wf-tooltip{display:block;}
+.wf-tooltip::before{content:'';position:absolute;bottom:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-bottom:6px solid var(--bd2);}
+.tt-label{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:9px;}
+.tt-row{margin-bottom:9px;}
+.tt-key{font-size:10px;color:var(--tx3);font-weight:600;letter-spacing:.06em;margin-bottom:2px;}
+.tt-val{font-size:11px;color:var(--tx2);line-height:1.65;font-family:'Noto Sans SC',sans-serif;}
+.tt-mine{margin-top:11px;padding-top:10px;border-top:1px solid var(--bd);}
+.tt-mine-label{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--cy);font-weight:700;margin-bottom:4px;}
+.tt-mine-val{font-size:11px;color:var(--cy);line-height:1.55;font-family:'Noto Sans SC',sans-serif;}
+
+/* contribution */
+.contrib-grid{display:flex;flex-direction:column;gap:2px;}
+.contrib-item{display:grid;grid-template-columns:3px 1fr;background:var(--sf);transition:background .2s;}
+.contrib-item:hover{background:var(--sf2);}
+.contrib-stripe.s-ac{background:var(--ac);}
+.contrib-stripe.s-cy{background:var(--cy);}
+.contrib-stripe.s-or{background:var(--or);}
+.contrib-stripe.s-gr{background:var(--gr);}
+.contrib-body{padding:17px 20px;}
+.contrib-title{font-size:13.5px;font-weight:600;margin-bottom:5px;color:var(--tx);}
+.contrib-desc{font-size:12px;color:var(--tx2);line-height:1.72;font-family:'Noto Sans SC',sans-serif;}
+.contrib-outputs{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;}
+.cout{font-size:10px;padding:2px 9px;border-radius:3px;background:var(--ac-lo);color:var(--ac2);border:1px solid var(--ac-b);font-weight:600;}
+
+/* HIGHLIGHT BOX */
+.highlight-box{
+  margin:20px 0;padding:20px 24px;
+  background:linear-gradient(135deg,rgba(79,142,247,.08),rgba(45,212,191,.05));
+  border:1px solid rgba(79,142,247,.25);border-radius:var(--r5);
+  border-left:3px solid var(--ac);
+}
+.hb-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:10px;}
+.hb-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--tx);margin-bottom:10px;line-height:1.3;}
+.hb-body{font-size:13px;color:var(--tx2);line-height:1.82;font-family:'Noto Sans SC',sans-serif;}
+.hb-body strong{color:var(--cy);}
+
+/* results */
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-top:4px;}
+.res-card{background:var(--sf);padding:22px 22px;transition:background .2s;}
+.res-card:hover{background:var(--sf2);}
+.res-card-from{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ac);font-weight:600;margin-bottom:10px;}
+.res-card-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--tx);margin-bottom:9px;line-height:1.3;}
+.res-card-body{font-size:12px;color:var(--tx2);line-height:1.72;font-family:'Noto Sans SC',sans-serif;}
+
+/* retro */
+.retro-list{display:flex;flex-direction:column;gap:10px;}
+.retro-item{border-radius:var(--r4);overflow:hidden;}
+.retro-head{display:flex;align-items:center;gap:12px;padding:14px 18px;}
+.retro-n{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;}
+.retro-item.r-red .retro-head{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.16);border-bottom:none;border-radius:var(--r4) var(--r4) 0 0;}
+.retro-item.r-red .retro-n{background:rgba(239,68,68,.15);color:#f87171;}
+.retro-item.r-or .retro-head{background:rgba(251,146,60,.07);border:1px solid rgba(251,146,60,.16);border-bottom:none;border-radius:var(--r4) var(--r4) 0 0;}
+.retro-item.r-or .retro-n{background:rgba(251,146,60,.15);color:var(--or);}
+.retro-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:var(--tx);}
+.retro-body{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:0 0 var(--r4) var(--r4);overflow:hidden;}
+.retro-item.r-red .retro-body{background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.16);border-top:none;}
+.retro-item.r-or .retro-body{background:rgba(251,146,60,.04);border:1px solid rgba(251,146,60,.16);border-top:none;}
+.retro-col{padding:15px 18px;}
+.retro-col:first-child{border-right:1px solid var(--bd);}
+.retro-col-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:7px;}
+.retro-item.r-red .retro-col-label.l{color:rgba(248,113,113,.7);}
+.retro-item.r-red .retro-col-label.r{color:rgba(52,211,153,.7);}
+.retro-item.r-or .retro-col-label.l{color:rgba(251,146,60,.7);}
+.retro-item.r-or .retro-col-label.r{color:rgba(52,211,153,.7);}
+.retro-text{font-size:12px;color:var(--tx2);line-height:1.72;font-family:'Noto Sans SC',sans-serif;}
+.retro-text strong{color:var(--tx);}
+.key-learn{margin-top:16px;padding:24px 28px;background:linear-gradient(135deg,rgba(79,142,247,.07),rgba(45,212,191,.04));border:1px solid rgba(79,142,247,.22);border-radius:var(--r5);}
+.kl-label{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:11px;}
+.kl-quote{font-size:16px;line-height:1.78;color:var(--tx);font-family:'Noto Serif SC',serif;font-weight:400;border-left:2px solid var(--ac);padding-left:18px;letter-spacing:.015em;}
+
+/* sidebar */
+.sb-sec{margin-bottom:30px;}
+.sb-title{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--ac);font-weight:700;padding-bottom:10px;border-bottom:1px solid var(--bd2);margin-bottom:14px;}
+.sb-kv{display:flex;flex-direction:column;gap:9px;}
+.sb-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.sb-k{font-size:11px;color:var(--tx3);font-family:'Noto Sans SC',sans-serif;padding-top:1px;}
+.sb-v{font-size:11px;color:var(--tx);font-weight:500;text-align:right;line-height:1.4;}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:5px;}
+.t-blue{font-size:10px;padding:3px 9px;border-radius:3px;background:var(--ac-lo);color:var(--ac2);border:1px solid var(--ac-b);font-weight:600;}
+.t-cy{font-size:10px;padding:3px 9px;border-radius:3px;background:var(--cy-lo);color:var(--cy);border:1px solid rgba(45,212,191,.25);font-weight:600;}
+.t-or{font-size:10px;padding:3px 9px;border-radius:3px;background:var(--or-lo);color:var(--or);border:1px solid rgba(251,146,60,.25);font-weight:600;}
+.t-dim{font-size:10px;padding:3px 9px;border-radius:3px;background:rgba(255,255,255,.04);color:var(--tx3);border:1px solid var(--bd);}
+.sb-metric{display:flex;flex-direction:column;gap:8px;}
+.sb-m-row{display:flex;justify-content:space-between;align-items:center;}
+.sb-m-k{font-size:11px;color:var(--tx3);font-family:'Noto Sans SC',sans-serif;}
+.sb-m-v{font-size:11px;color:var(--cy);font-weight:700;}
+.progress-track{height:3px;background:var(--sf2);border-radius:3px;overflow:hidden;margin-top:5px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--ac),var(--cy));border-radius:3px;transition:width 1.2s ease;}
+.sb-progress-labels{display:flex;justify-content:space-between;margin-top:6px;}
+.sb-progress-labels span{font-size:9px;color:var(--tx3);font-weight:500;}
+.sb-progress-labels .active-label{color:var(--cy);}
+.desens-note{margin-top:2px;padding:13px 15px;border-radius:var(--r4);background:rgba(251,146,60,.04);border:1px dashed rgba(251,146,60,.22);font-size:11px;color:var(--tx3);line-height:1.65;font-family:'Noto Sans SC',sans-serif;}
+.desens-note strong{color:rgba(251,146,60,.8);}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:960px){
+  nav{padding:0 24px;}
+  .hero{padding:104px 24px 56px;}
+  .metrics{flex-wrap:wrap;}
+  .page-grid{grid-template-columns:1fr;}
+  main{padding:44px 24px 60px;}
+
+  .context-split,.decision-grid,.result-grid{grid-template-columns:1fr;}
+  .retro-body{grid-template-columns:1fr;}
+  .retro-col:first-child{border-right:none;border-bottom:1px solid var(--bd);}
+  .prob-row{grid-template-columns:38px 1fr;}
+  .prob-meta{display:none;}
+}
+
+/* ─── PROJECT INFO STRIP ─────────────────────────────── */
+.proj-strip{
+  padding:0 56px 0;
+  border-bottom:1px solid var(--bd);
+  background:var(--bg1);
+}
+.ps-cards{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
+}
+.ps-card{
+  padding:24px 22px;background:var(--sf);
+  transition:background .2s;
+}
+.ps-card:hover{background:var(--sf2);}
+.ps-label{
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ac);font-weight:700;padding-bottom:10px;
+  border-bottom:1px solid var(--bd2);margin-bottom:12px;
+}
+.ps-kv{display:flex;flex-direction:column;gap:7px;}
+.ps-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.ps-k{font-size:11px;color:var(--tx3);font-family:'Noto Sans SC',sans-serif;padding-top:1px;}
+.ps-v{font-size:11px;color:var(--tx);font-weight:500;text-align:right;line-height:1.4;}
+.ps-cy{color:var(--cy)!important;}
+@media(max-width:960px){
+  .proj-strip{padding:0 24px;}
+  .ps-cards{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .ps-cards{grid-template-columns:1fr;}
+}
+
+/* ─── LIGHT MODE ─────────────────────────────────────── */
+html.light{
+  --bg:    #f4f6fb;
+  --bg1:   #edf0f7;
+  --bg2:   #e4e9f4;
+  --sf:    #dde3f0;
+  --sf2:   #d4dbed;
+  --sf3:   #c8d2e8;
+  --ac:    #2055cc;
+  --ac2:   #1a46b0;
+  --ac-lo: rgba(32,85,204,.1);
+  --ac-b:  rgba(32,85,204,.22);
+  --cy:    #0d8f7e;
+  --cy-lo: rgba(13,143,126,.1);
+  --or:    #c85a0a;
+  --or-lo: rgba(200,90,10,.1);
+  --gr:    #1a7a52;
+  --gr-lo: rgba(26,122,82,.08);
+  --pu:    #6340c8;
+  --pu-lo: rgba(99,64,200,.1);
+  --ye:    #a06800;
+  --tx:    #0d1424;
+  --tx2:   #374165;
+  --tx3:   #8090b8;
+  --bd:    rgba(0,0,50,.1);
+  --bd2:   rgba(0,0,50,.18);
+}
+html.light .hero::before{
+  background:
+    radial-gradient(ellipse 800px 500px at 80% -10%,rgba(32,85,204,.06) 0%,transparent 60%),
+    radial-gradient(ellipse 400px 300px at 10% 80%,rgba(13,143,126,.04) 0%,transparent 60%);
+}
+html.light nav{background:rgba(244,246,251,.94);}
+html.light .metrics{background:var(--sf);}
+html.light #arch-svg rect{filter:brightness(1.02);}
+
+/* theme toggle button */
+.theme-toggle{
+  display:flex;align-items:center;gap:7px;
+  background:var(--sf);border:1px solid var(--bd2);
+  border-radius:20px;padding:5px 13px 5px 10px;
+  cursor:pointer;transition:background .2s,border-color .2s;
+  color:var(--tx2);font-size:11px;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  font-family:'Space Grotesk',sans-serif;
+}
+.theme-toggle:hover{background:var(--sf2);border-color:var(--ac);}
+.theme-toggle-icon{
+  width:18px;height:18px;position:relative;flex-shrink:0;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="portfolio-index.html" class="nav-back">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    返回作品集
+  </a>
+  <div class="nav-crumb">SA Portfolio &nbsp;/&nbsp; <span>Project 01</span></div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="nav-tag">智能硬件 · 售前</div>
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" title="切换明暗模式">
+      <span class="theme-toggle-icon">
+        <svg id="icon-dark" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 8.5a6 6 0 01-6.5 5.97A6 6 0 017 3.02 6 6 0 0114 8.5z" fill="currentColor" opacity=".9"/>
+        </svg>
+        <svg id="icon-light" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+          <circle cx="8" cy="8" r="3.2" fill="currentColor"/>
+          <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+            <line x1="8" y1="1" x2="8" y2="2.6"/><line x1="8" y1="13.4" x2="8" y2="15"/>
+            <line x1="1" y1="8" x2="2.6" y2="8"/><line x1="13.4" y1="8" x2="15" y2="8"/>
+            <line x1="3.05" y1="3.05" x2="4.17" y2="4.17"/><line x1="11.83" y1="11.83" x2="12.95" y2="12.95"/>
+            <line x1="3.05" y1="12.95" x2="4.17" y2="11.83"/><line x1="11.83" y1="4.17" x2="12.95" y2="3.05"/>
+          </g>
+        </svg>
+      </span>
+      <span id="theme-label">明亮</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tags">
+    <span class="htag htag-a">智能硬件 · AI 云端赋能</span>
+    <span class="htag htag-b">POC 测试推进中</span>
+    <span class="htag htag-c">SA 实习生 · 全程参与</span>
+  </div>
+  <h1 class="hero-h">AI 老年陪伴<br><span class="dim">智能硬件赋能项目</span></h1>
+  <p class="hero-sub">云端多模态实时交互方案 × 某智能硬件创业公司</p>
+  <p class="hero-desc">某智能硬件创业公司计划推出面向老年群体的 AI 陪伴穿戴设备。参与完整售前流程：初次线下拜访、方案演示辅助、需求识别与方案匹配、会议复盘与内网输出，推动账号开通与 SDK 测试启动。</p>
+  <div class="metrics">
+    <div class="metric"><span class="metric-val blue">10 万台</span><span class="metric-lbl">客户年度目标量级</span></div>
+    <div class="metric"><span class="metric-val cyan">1.3s</span><span class="metric-lbl">端到端音频延时上限</span></div>
+    <div class="metric"><span class="metric-val green">POC 启动</span><span class="metric-lbl">账号开通 · 测试进行中</span></div>
+    <div class="metric"><span class="metric-val orange">5 项</span><span class="metric-lbl">核心痛点全覆盖</span></div>
+  </div>
+</section>
+
+<!-- PROJECT INFO STRIP -->
+<section class="proj-strip">
+  <div class="ps-cards">
+    <div class="ps-card">
+      <div class="ps-label">Project Info</div>
+      <div class="ps-kv">
+        <div class="ps-row"><span class="ps-k">客户类型</span><span class="ps-v">智能硬件创业公司</span></div>
+        <div class="ps-row"><span class="ps-k">客户所在地</span><span class="ps-v">上海</span></div>
+        <div class="ps-row"><span class="ps-k">初访时间</span><span class="ps-v">2026.01</span></div>
+        <div class="ps-row"><span class="ps-k">当前阶段</span><span class="ps-v ps-cy">POC 测试中</span></div>
+        <div class="ps-row"><span class="ps-k">我的角色</span><span class="ps-v">SA 实习生</span></div>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="ps-row" style="margin-bottom:6px;"><span class="ps-k">推进进度</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:55%;"></div></div>
+        <div class="sb-progress-labels"><span>初访</span><span class="active-label">测试中</span><span>成交</span></div>
+      </div>
+    </div>
+    <div class="ps-card">
+      <div class="ps-label">涉及方案能力</div>
+      <div class="tag-cloud" style="margin-top:8px;">
+        <span class="t-blue">多模态互动 SDK</span><span class="t-blue">大语言模型</span>
+        <span class="t-cy">ASR / TTS</span><span class="t-cy">实时传输 RTN</span>
+        <span class="t-cy">7 大音频增强</span><span class="t-cy">VAD 增强</span>
+        <span class="t-or">长期记忆系统</span><span class="t-or">主动任务引擎</span>
+        <span class="t-or">情绪感知</span><span class="t-dim">内容生态接入</span>
+        <span class="t-dim">License 模式</span><span class="t-dim">数据导出 API</span>
+      </div>
+    </div>
+    <div class="ps-card">
+      <div class="ps-label">方案核心指标</div>
+      <div class="sb-metric" style="margin-top:8px;">
+        <div class="sb-m-row"><span class="sb-m-k">端到端音频延时</span><span class="sb-m-v">低至 1.3s</span></div>
+        <div class="sb-m-row"><span class="sb-m-k">语音打断延时</span><span class="sb-m-v">&lt; 0.8s</span></div>
+        <div class="sb-m-row"><span class="sb-m-k">端到端视觉延时</span><span class="sb-m-v">低至 2.0s</span></div>
+        <div class="sb-m-row"><span class="sb-m-k">SDK 最小包体</span><span class="sb-m-v">&lt; 300K</span></div>
+        <div class="sb-m-row"><span class="sb-m-k">最快接入时间</span><span class="sb-m-v">1 天</span></div>
+      </div>
+    </div>
+    <div class="ps-card">
+      <div class="ps-label">展示的能力维度</div>
+      <div class="tag-cloud" style="margin-top:8px;">
+        <span class="t-or">业务需求分层</span><span class="t-or">方案架构选型</span>
+        <span class="t-cy">技术场景化翻译</span><span class="t-cy">客户沟通辅助</span>
+        <span class="t-blue">商业化思维</span><span class="t-blue">售前闭环执行</span>
+        <span class="t-dim">期望管理</span><span class="t-dim">团队协作</span><span class="t-dim">知识沉淀输出</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="page-grid">
+<main>
+
+<!-- 1. WHY -->
+<section class="sec reveal">
+  <div class="sec-head">
+    <div class="label">Why This Project</div>
+    <h2 class="sec-title">市场入口 · 项目背景与商机判断</h2>
+  </div>
+  <p class="body-copy">老龄化社会加速，独居老人的情感陪伴与健康监护是正在爆发的细分市场。大多数切入这一赛道的创业公司具备硬件研发能力，但缺乏自研大模型的团队规模和资金——这正是云端 AI 赋能方案的典型入口：<strong>我们提供「大脑」，客户提供「身体」。</strong></p>
+  <p class="body-copy">客户计划开发一款挂式 AI 陪伴设备，支持 Wi-Fi / 4G，初期语音交互为核心，后续可扩展视觉模态。Q1 完成百台量级样机，Q2 小批量，年度目标十万台，节奏紧，对接入速度要求极高。</p>
+  <div class="context-split">
+    <div class="ctx-card">
+      <div class="ctx-card-label">行业趋势</div>
+      <div class="ctx-card-title">GUI 时代的边界在哪里</div>
+      <div class="ctx-card-body">屏幕与 APP 对老年人构成天然门槛。语言交互界面让设备使用门槛归零——不需要用户学习，戴上就会用。这是市场壁垒，不只是功能差异。</div>
+    </div>
+    <div class="ctx-card">
+      <div class="ctx-card-label">商机判断</div>
+      <div class="ctx-card-title">为什么这个客户值得优先推进</div>
+      <div class="ctx-card-body">年度十万台量级意味着十万份 License；客户使用竞品云，存在迁移商机。拿下一个 ISV，等于间接覆盖其全部下游终端用户——这是乘数效应，不是单点项目。</div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- 2. PROBLEM -->
+<section class="sec reveal">
+  <div class="sec-head">
+    <div class="label">Problem Framing</div>
+    <h2 class="sec-title">客户问题定义 · 表层诉求与深层驱动</h2>
+  </div>
+  <p class="body-copy" style="margin-bottom:18px;">客户表面上在找「一套 AI 方案」，但真实需求分属三个层次：<strong>技术可行性 / 体验达标 / 商业模式安全</strong>。识别这三层，是方案讲解切入点不同的原因。</p>
+  <div class="problem-grid">
+    <div class="prob-row">
+      <div class="prob-num">01</div>
+      <div class="prob-body">
+        <div class="prob-title">无自研 AI 能力，需快速集成成熟方案</div>
+        <div class="prob-desc">硬件团队不具备大模型研发能力，Q1 出样机节奏极紧，需要完整 SDK 文档、快速接入、完善技术支持保障。</div>
+        <div class="prob-note">对应切入：SDK 源码开放 + 最快 1 天接入 + 支持低成本嵌入式芯片（RTOS）</div>
+      </div>
+      <div class="prob-meta"><span class="prob-type type-hard">硬性需求</span></div>
+    </div>
+    <div class="prob-row">
+      <div class="prob-num">02</div>
+      <div class="prob-body">
+        <div class="prob-title">交互延迟是体验生死线，老年用户容忍度极低</div>
+        <div class="prob-desc">客户明确提出 ≤1.5s 的延迟要求，且当场追问两次。一旦感知卡顿，老年用户会认为「设备坏了」，直接影响产品口碑。</div>
+        <div class="prob-note">对应切入：全链路端到端音频延时低至 1.3s；VAD 精准检测说话结束，最大化降低主观等待感</div>
+      </div>
+      <div class="prob-meta"><span class="prob-type type-hard">硬性需求</span></div>
+    </div>
+    <div class="prob-row">
+      <div class="prob-num">03</div>
+      <div class="prob-body">
+        <div class="prob-title">主动关怀是核心差异化卖点，不是可选功能</div>
+        <div class="prob-desc">客户将「基于历史记忆主动发起关怀对话」作为向投资人讲故事的核心卖点。这是融资叙事的基础，而非功能偏好。</div>
+        <div class="prob-note">对应切入：主动任务引擎（规划中）+ 长短期记忆 + 情绪感知；同时需进行期望值管理</div>
+      </div>
+      <div class="prob-meta"><span class="prob-type type-soft">高度关注</span></div>
+    </div>
+    <div class="prob-row">
+      <div class="prob-num">04</div>
+      <div class="prob-body">
+        <div class="prob-title">成本结构必须可预测，服务融资计划书</div>
+        <div class="prob-desc">按量付费模型无法精确测算硬件 BOM，需要一次性授权模式支撑商业计划书中的单台成本模型。</div>
+        <div class="prob-note">关键话术：License = 可预测成本 = 融资故事里稳定的利润结构锚点</div>
+      </div>
+      <div class="prob-meta"><span class="prob-type type-biz">商业诉求</span></div>
+    </div>
+    <div class="prob-row">
+      <div class="prob-num">05</div>
+      <div class="prob-body">
+        <div class="prob-title">数据自主：对话历史需超 7 天，支持本地管理</div>
+        <div class="prob-desc">计划自建数据管理平台，需支持超 7 天存储并可 API 导出——背后是对数据主权与未来 AI 个性化训练数据的战略布局。</div>
+        <div class="prob-note">对应切入：对话历史导出 API；存储容量上限为信息缺口，需内部产研确认</div>
+      </div>
+      <div class="prob-meta"><span class="prob-type type-biz">商业诉求</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- 3. SOLUTION -->
+<section class="sec reveal">
+  <div class="sec-head">
+    <div class="label">Solution Overview</div>
+    <h2 class="sec-title">方案总览 · 架构逻辑与交互式架构图</h2>
+  </div>
+  <p class="body-copy solution-intro" style="margin-bottom:22px;">核心架构逻辑是<strong>「轻端重云」</strong>：把所有 AI 计算放在云端，终端设备只负责采集输入与播放输出两件事。低成本嵌入式芯片无需升级，也能支撑完整的多模态 AI 体验——硬件 BOM 成本保持可控，同时云端能力随时升级推送，无需召回设备。</p>
+
+  <!-- INTERACTIVE ARCH DIAGRAM -->
+  <div class="arch-diagram-outer">
+    <div class="arch-diagram-header">
+      <span class="arch-diagram-title">AI 老年陪伴硬件 · 云端协同方案架构图</span>
+      <span class="arch-diagram-note">悬停节点 · 查看技术与业务说明</span>
+    </div>
+    <div class="arch-canvas">
+      <svg id="arch-svg" viewBox="0 0 760 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:680px;font-family:'Space Grotesk','Noto Sans SC',sans-serif;">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M2 2L8 5L2 8" fill="none" stroke="#4a5680" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+          <marker id="arr-ac" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M2 2L8 5L2 8" fill="none" stroke="#4f8ef7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+          <marker id="arr-cy" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M2 2L8 5L2 8" fill="none" stroke="#2dd4bf" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+
+        <!-- ── LAYER LABELS ── -->
+        <text x="18" y="82" font-size="9" fill="#4a5680" letter-spacing="1" text-anchor="start" font-weight="600" transform="rotate(-90,18,82)">端侧层</text>
+        <text x="18" y="220" font-size="9" fill="#4a5680" letter-spacing="1" text-anchor="start" font-weight="600" transform="rotate(-90,18,220)">传输层</text>
+        <text x="18" y="355" font-size="9" fill="#4a5680" letter-spacing="1" text-anchor="start" font-weight="600" transform="rotate(-90,18,355)">云端层</text>
+
+        <!-- ══ ROW 1 : 端侧 ══ -->
+        <!-- Node: 用户输入 (麦克风) -->
+        <g class="arch-node" data-id="mic">
+          <rect x="42" y="30" width="110" height="64" rx="8" fill="#0f1524" stroke="#2a3654" stroke-width="1"/>
+          <rect x="42" y="30" width="110" height="3" rx="2" fill="#2dd4bf"/>
+          <text x="97" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#f0f4ff">用户语音输入</text>
+          <text x="97" y="72" text-anchor="middle" font-size="10" fill="#94a3cc">麦克风采集</text>
+          <text x="97" y="85" text-anchor="middle" font-size="9" fill="#2dd4bf">PCM 音频格式</text>
+        </g>
+
+        <!-- Node: 端侧 SDK -->
+        <g class="arch-node" data-id="sdk">
+          <rect x="198" y="30" width="120" height="64" rx="8" fill="#0f1524" stroke="#2a3654" stroke-width="1"/>
+          <rect x="198" y="30" width="120" height="3" rx="2" fill="#4f8ef7"/>
+          <text x="258" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#f0f4ff">端侧 SDK</text>
+          <text x="258" y="71" text-anchor="middle" font-size="10" fill="#94a3cc">集成 · 3A音频处理</text>
+          <text x="258" y="84" text-anchor="middle" font-size="9" fill="#4f8ef7">&lt;300K 包体 · RTOS</text>
+        </g>
+
+        <!-- Node: 设备唤醒 -->
+        <g class="arch-node" data-id="vad">
+          <rect x="374" y="30" width="110" height="64" rx="8" fill="#0f1524" stroke="#2a3654" stroke-width="1"/>
+          <rect x="374" y="30" width="110" height="3" rx="2" fill="#4f8ef7"/>
+          <text x="429" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#f0f4ff">VAD 检测</text>
+          <text x="429" y="71" text-anchor="middle" font-size="10" fill="#94a3cc">语音活动检测</text>
+          <text x="429" y="84" text-anchor="middle" font-size="9" fill="#4f8ef7">精准判断说话结束</text>
+        </g>
+
+        <!-- Node: 3A音频增强 -->
+        <g class="arch-node" data-id="audio3a">
+          <rect x="540" y="30" width="120" height="64" rx="8" fill="#0f1524" stroke="#2a3654" stroke-width="1"/>
+          <rect x="540" y="30" width="120" height="3" rx="2" fill="#a78bfa"/>
+          <text x="600" y="55" text-anchor="middle" font-size="12" font-weight="700" fill="#f0f4ff">7 大音频增强</text>
+          <text x="600" y="71" text-anchor="middle" font-size="10" fill="#94a3cc">降噪·回声消除</text>
+          <text x="600" y="84" text-anchor="middle" font-size="9" fill="#a78bfa">声纹识别·智能打断</text>
+        </g>
+
+        <!-- ── ROW 1 ARROWS ── -->
+        <line x1="152" y1="62" x2="196" y2="62" stroke="#2a3654" stroke-width="1" marker-end="url(#arr)"/>
+        <line x1="318" y1="62" x2="372" y2="62" stroke="#2a3654" stroke-width="1" marker-end="url(#arr)"/>
+        <line x1="484" y1="62" x2="538" y2="62" stroke="#2a3654" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- ══ ROW 2 : RTN 传输 ══ -->
+        <g class="arch-node" data-id="rtn">
+          <rect x="198" y="148" width="380" height="60" rx="8" fill="#081220" stroke="#2a4a7a" stroke-width="1.5"/>
+          <rect x="198" y="148" width="380" height="3" rx="2" fill="#4f8ef7"/>
+          <text x="388" y="173" text-anchor="middle" font-size="12" font-weight="700" fill="#f0f4ff">实时传输网络（RTN）</text>
+          <text x="388" y="189" text-anchor="middle" font-size="10" fill="#7bb0ff">全链路低延时通道 · 端到端音频 ≤1.3s · 语音打断响应 &lt;0.8s</text>
+          <text x="388" y="202" text-anchor="middle" font-size="9" fill="#4f8ef7">实时音视频 + 互动指令双通道传输</text>
+        </g>
+
+        <!-- ── 端侧 → RTN arrows ── -->
+        <line x1="258" y1="94" x2="258" y2="146" stroke="#4f8ef7" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-ac)"/>
+        <line x1="429" y1="94" x2="429" y2="146" stroke="#4f8ef7" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-ac)"/>
+        <line x1="600" y1="94" x2="520" y2="146" stroke="#a78bfa" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-ac)"/>
+
+        <!-- ══ ROW 3 : 云端 AI ══ -->
+        <!-- Node: 意图识别 (分流) -->
+        <g class="arch-node" data-id="intent">
+          <rect x="42" y="265" width="118" height="72" rx="8" fill="#0f1524" stroke="#2a3654" stroke-width="1"/>
+          <rect x="42" y="265" width="118" height="3" rx="2" fill="#fb923c"/>
+          <text x="101" y="290" text-anchor="middle" font-size="12" font-weight="700" fill="#f0f4ff">意图识别</text>
+          <text x="101" y="306" text-anchor="middle" font-size="10" fill="#94a3cc">分流路由器</text>
+          <text x="101" y="320" text-anchor="middle" font-size="9" fill="#fb923c">简单指令 vs 复杂对话</text>
+          <text x="101" y="331" text-anchor="middle" font-size="9" fill="#4a5680">降本 + 提速</text>
+        </g>
+
+        <!-- Node: LLM 大模型 -->
+        <g class="arch-node" data-id="llm">
+          <rect x="208" y="265" width="118" height="72" rx="8" fill="#0a1928" stroke="#1a4470" stroke-width="1.5"/>
+          <rect x="208" y="265" width="118" height="3" rx="2" fill="#4f8ef7"/>
+          <text x="267" y="290" text-anchor="middle" font-size="12" font-weight="700" fill="#f0f4ff">大语言模型</text>
+          <text x="267" y="306" text-anchor="middle" font-size="10" fill="#94a3cc">LLM / RAG / Agent</text>
+          <text x="267" y="320" text-anchor="middle" font-size="9" fill="#7bb0ff">支持第三方模型替换</text>
+          <text x="267" y="331" text-anchor="middle" font-size="9" fill="#4a5680">OpenAI 标准接口</text>
+        </g>
+
+        <!-- Node: 主动任务/记忆 -->
+        <g class="arch-node" data-id="memory">
+          <rect x="374" y="265" width="122" height="72" rx="8" fill="#0e1830" stroke="#3a2a6a" stroke-width="1.5"/>
+          <rect x="374" y="265" width="122" height="3" rx="2" fill="#a78bfa"/>
+          <text x="435" y="289" text-anchor="middle" font-size="11.5" font-weight="700" fill="#f0f4ff">记忆 + 主动任务</text>
+          <text x="435" y="305" text-anchor="middle" font-size="9.5" fill="#94a3cc">长短期记忆 · 用户画像</text>
+          <text x="435" y="319" text-anchor="middle" font-size="9" fill="#a78bfa">情绪感知 · 定时触发</text>
+          <text x="435" y="330" text-anchor="middle" font-size="9" fill="#fbbf24">★ 主动关怀核心能力</text>
+        </g>
+
+        <!-- Node: ASR / TTS -->
+        <g class="arch-node" data-id="asrtts">
+          <rect x="544" y="265" width="116" height="72" rx="8" fill="#0f1524" stroke="#2a3654" stroke-width="1"/>
+          <rect x="544" y="265" width="116" height="3" rx="2" fill="#2dd4bf"/>
+          <text x="602" y="290" text-anchor="middle" font-size="12" font-weight="700" fill="#f0f4ff">ASR · TTS</text>
+          <text x="602" y="306" text-anchor="middle" font-size="10" fill="#94a3cc">语音转文字 · 合成</text>
+          <text x="602" y="320" text-anchor="middle" font-size="9" fill="#2dd4bf">100+ 音色 · 音色复刻</text>
+          <text x="602" y="331" text-anchor="middle" font-size="9" fill="#4a5680">流式推理 · 低延时</text>
+        </g>
+
+        <!-- ── RTN → 云端 arrows ── -->
+        <line x1="300" y1="208" x2="180" y2="263" stroke="#4f8ef7" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-ac)"/>
+        <line x1="388" y1="208" x2="320" y2="263" stroke="#4f8ef7" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-ac)"/>
+        <line x1="450" y1="208" x2="460" y2="263" stroke="#a78bfa" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-ac)"/>
+        <line x1="530" y1="208" x2="580" y2="263" stroke="#2dd4bf" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-cy)"/>
+
+        <!-- ── 意图识别 → LLM ── -->
+        <line x1="160" y1="301" x2="206" y2="301" stroke="#fb923c" stroke-width="1" marker-end="url(#arr)"/>
+
+        <!-- ══ ROW 4 : 输出层 ══ -->
+        <g class="arch-node" data-id="output">
+          <rect x="198" y="388" width="380" height="52" rx="8" fill="#081820" stroke="#0a3a28" stroke-width="1.5"/>
+          <rect x="198" y="388" width="380" height="3" rx="2" fill="#34d399"/>
+          <text x="388" y="411" text-anchor="middle" font-size="12" font-weight="700" fill="#f0f4ff">语音回传播放 · 设备端输出</text>
+          <text x="388" y="427" text-anchor="middle" font-size="10" fill="#34d399">RTN 回传 → 端侧 SDK 解码 → 扬声器播放 · 老人听到 AI 回应</text>
+        </g>
+
+        <!-- ── 云端 → 输出层 ── -->
+        <line x1="267" y1="337" x2="350" y2="386" stroke="#4f8ef7" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-ac)"/>
+        <line x1="435" y1="337" x2="420" y2="386" stroke="#a78bfa" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-ac)"/>
+        <line x1="602" y1="337" x2="500" y2="386" stroke="#2dd4bf" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr-cy)"/>
+
+        <!-- ── 图例 ── -->
+        <rect x="42" y="395" width="100" height="38" rx="6" fill="#0b1220" stroke="#1a2540" stroke-width="1"/>
+        <line x1="55" y1="409" x2="80" y2="409" stroke="#4f8ef7" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="85" y="412" font-size="9" fill="#4a5680" font-weight="500">云端数据流</text>
+        <line x1="55" y1="424" x2="80" y2="424" stroke="#2a3654" stroke-width="1"/>
+        <text x="85" y="427" font-size="9" fill="#4a5680" font-weight="500">端侧处理流</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Tooltip overlay -->
+  <div class="arch-tooltip" id="arch-tooltip">
+    <div class="att-label" id="att-label"></div>
+    <div class="att-title" id="att-title"></div>
+    <div class="att-tech" id="att-tech"></div>
+    <div class="att-body" id="att-body"></div>
+    <div class="att-biz">
+      <div class="att-biz-label">业务价值</div>
+      <div id="att-biz"></div>
+    </div>
+  </div>
+
+  <!-- Decision cards -->
+  <div class="decision-grid">
+    <div class="dec-card">
+      <div class="dec-q">架构决策</div>
+      <div class="dec-title">为什么推轻端重云，而不是端侧部署</div>
+      <div class="dec-body">客户芯片无法跑本地大模型，但更关键的是：云端方案支持远程升级。今天集成的 SDK，未来新能力可直接推送，<strong>硬件不需要召回升级</strong>——这是产品长期竞争力，不只是技术选型。</div>
+    </div>
+    <div class="dec-card">
+      <div class="dec-q">性能决策</div>
+      <div class="dec-title">1.3s 不是参数，是用户感知「活人」的生死线</div>
+      <div class="dec-body">开源拼接方案往往 3-4 秒延迟。1.3s 和 3s 的差距不是量变，是「伙伴感」和「复读机感」的质变。<strong>体验差 1 秒，老年用户的产品信任差一倍。</strong></div>
+      <div class="dec-quote">性能指标永远要翻译成用户感受，而不是留在参数表里。</div>
+    </div>
+    <div class="dec-card">
+      <div class="dec-q">生态决策</div>
+      <div class="dec-title">30+ 预置应用卖的不是功能，是上市时间</div>
+      <div class="dec-body">大模型谁都有，但天气、地图、音乐的商务对接需要巨大工作量。「开箱即用」帮客户省掉至少半年的内容生态建设周期——<strong>Time-to-Market 才是这个功能的真实价值。</strong></div>
+    </div>
+    <div class="dec-card hl">
+      <div class="dec-q">商业决策</div>
+      <div class="dec-title">License 是融资叙事里成本确定性的锚点</div>
+      <div class="dec-body">同一个定价，两种说法结果完全不同。「按量付费」让投资人看到变动成本；<strong>一次性 License 让单台 BOM 成本固定，可以精确写进商业计划书的成本模型。</strong></div>
+      <div class="dec-quote">SA 的价值之一：把技术特性翻译成商业决策语言。</div>
+    </div>
+  </div>
+
+  <!-- Match table -->
+  <div class="match-wrap" style="margin-top:22px;">
+    <table class="match-table">
+      <thead>
+        <tr>
+          <th style="width:25%;">客户需求</th>
+          <th style="width:38%;">方案覆盖</th>
+          <th style="width:16%;">匹配度</th>
+          <th style="width:21%;">备注 / 风险</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="td-need">快速集成，文档完善</td><td>SDK 源码开放，1天接入，&lt;300K包体</td><td><span class="status-dot sd-g"><span class="dot-g"></span>高</span></td><td>—</td></tr>
+        <tr><td class="td-need">延迟 ≤1.5s</td><td>全链路端到端音频 1.3s，打断 &lt;0.8s</td><td><span class="status-dot sd-g"><span class="dot-g"></span>高</span></td><td>需 POC 实测验证</td></tr>
+        <tr><td class="td-need">主动关怀功能</td><td>主动任务引擎（规划中上线）</td><td><span class="status-dot sd-y"><span class="dot-y"></span>中（待验证）</span></td><td>功能未落地，需期望管理</td></tr>
+        <tr><td class="td-need">成本可预测</td><td>一次性 License，按设备收费</td><td><span class="status-dot sd-g"><span class="dot-g"></span>高</span></td><td>长期记忆独立计费需说明</td></tr>
+        <tr><td class="td-need">数据存储 + API 导出</td><td>对话历史导出 API</td><td><span class="status-dot sd-y"><span class="dot-y"></span>中（待确认）</span></td><td>容量上限需产研确认</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- 4. MY CONTRIBUTION (HIGHLIGHT) -->
+<section class="sec reveal">
+  <div class="sec-head">
+    <div class="label">Highlight Moment</div>
+    <h2 class="sec-title">现场高光时刻 · 主动关怀的场景化诠释</h2>
+  </div>
+
+  <div class="highlight-box">
+    <div class="hb-label">现场贡献 · 可复述的核心故事</div>
+    <div class="hb-title">从「技术功能」到「老人的朋友」——一个场景类比打开了客户的想象空间</div>
+    <p class="hb-body">在讲解「主动任务 / 情绪感知」模块时，客户方对这一功能的实际效果仍有疑问。我主动介入，用具体的老年用户场景做了一个即兴类比：</p>
+    <p class="hb-body" style="margin-top:12px;padding-left:16px;border-left:2px solid rgba(45,212,191,.4);color:var(--tx);">「您设想一下，老人家之前跟设备说过最近胸口不舒服。两天后早上，设备可以主动说：今天心率看起来正常，感觉好些了吗？或者说：今天是不是也出去晨练了？——这样的设备对老人家来说<strong>更像一个真正的朋友，而不是等着被问的机器</strong>。」</p>
+    <p class="hb-body" style="margin-top:12px;">这个表达让客户立刻抓住了差异化价值——从「被动响应」到「主动陪伴」。这也是他们产品在老年硬件市场能建立护城河的核心卖点，是融资叙事的情感支撑点。</p>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- 5. WORKFLOW -->
+<section class="sec reveal">
+  <div class="sec-head">
+    <div class="label">Engagement Flow</div>
+    <h2 class="sec-title">售前推进链路 · 从初访到测试启动</h2>
+  </div>
+  <p class="body-copy" style="margin-bottom:20px;">从初次接触到 SDK 测试启动，共经历五个节点。每个节点对应不同的目标、动作和推进重心。悬停节点查看详细说明。</p>
+
+  <div class="workflow-outer">
+    <div class="workflow-header">
+      <span class="workflow-header-title">售前推进节点图</span>
+      <span class="workflow-note">Hover 节点查看详情</span>
+    </div>
+    <div class="workflow-scroll">
+      <div class="wf-track">
+        <div class="wf-node">
+          <div class="wf-node-inner">
+            <div class="wf-node-step">拜访前</div>
+            <div class="wf-node-title">客户研究与材料准备</div>
+            <div class="wf-node-sub">调研 · 预判痛点 · 备材料</div>
+            <span class="wf-node-badge badge-done">完成</span>
+          </div>
+          <div class="wf-tooltip">
+            <div class="tt-label">节点 0 — Prep</div>
+            <div class="tt-row"><div class="tt-key">目标</div><div class="tt-val">理解客户背景，预判核心诉求，备好针对性材料</div></div>
+            <div class="tt-row"><div class="tt-key">动作</div><div class="tt-val">行业竞品调研；预判老年场景痛点；准备方案介绍与场景演示用例</div></div>
+            <div class="tt-mine"><div class="tt-mine-label">我的参与</div><div class="tt-mine-val">熟悉 RTC 多模态方案内容，协助整理场景演示素材</div></div>
+          </div>
+        </div>
+        <div class="wf-arrow"><div class="wf-arrow-line"></div></div>
+        <div class="wf-node active">
+          <div class="wf-node-inner">
+            <div class="wf-node-step">2026.01.30</div>
+            <div class="wf-node-title">线下初访 · 上海</div>
+            <div class="wf-node-sub">约 1.5h · 产品技术侧</div>
+            <span class="wf-node-badge badge-done">完成</span>
+          </div>
+          <div class="wf-tooltip">
+            <div class="tt-label">节点 1 — Visit</div>
+            <div class="tt-row"><div class="tt-key">目标</div><div class="tt-val">建立信任，摸清需求层次，验证方案适配度</div></div>
+            <div class="tt-row"><div class="tt-key">难点</div><div class="tt-val">客户对数据存储容量细节追问，当场无法给出确切答复</div></div>
+            <div class="tt-mine"><div class="tt-mine-label">我的参与</div><div class="tt-mine-val">辅助展示产品控制台；将技术名词场景化翻译；现场做出主动关怀的类比讲解；实时记录需求与反应</div></div>
+          </div>
+        </div>
+        <div class="wf-arrow"><div class="wf-arrow-line"></div></div>
+        <div class="wf-node">
+          <div class="wf-node-inner">
+            <div class="wf-node-step">拜访后 D+1~3</div>
+            <div class="wf-node-title">跟进闭环</div>
+            <div class="wf-node-sub">纪要 · 建群 · 内网输出</div>
+            <span class="wf-node-badge badge-done">完成</span>
+          </div>
+          <div class="wf-tooltip">
+            <div class="tt-label">节点 2 — Follow-up</div>
+            <div class="tt-row"><div class="tt-key">目标</div><div class="tt-val">完成售前闭环，推动内部资源跟进</div></div>
+            <div class="tt-row"><div class="tt-key">动作</div><div class="tt-val">结构化会议纪要整理（结合录音复盘）；建微信群发方案；撰写内网方案解读文章，获得团队认可与点赞</div></div>
+            <div class="tt-mine"><div class="tt-mine-label">我的参与</div><div class="tt-mine-val">独立完成纪要整理与内网文章撰写，将完整方案架构业务化转译</div></div>
+          </div>
+        </div>
+        <div class="wf-arrow"><div class="wf-arrow-line"></div></div>
+        <div class="wf-node active">
+          <div class="wf-node-inner">
+            <div class="wf-node-step">当前阶段</div>
+            <div class="wf-node-title">账号开通 · SDK 测试</div>
+            <div class="wf-node-sub">POC 测试进行中</div>
+            <span class="wf-node-badge badge-active">进行中</span>
+          </div>
+          <div class="wf-tooltip">
+            <div class="tt-label">节点 3 — POC Start</div>
+            <div class="tt-row"><div class="tt-key">目标</div><div class="tt-val">客户完成账号注册，产研介入，SDK 集成测试正式开始</div></div>
+            <div class="tt-row"><div class="tt-key">测试重点</div><div class="tt-val">主动任务功能验证、延迟实测、数据 API 对接</div></div>
+            <div class="tt-mine"><div class="tt-mine-label">我的参与</div><div class="tt-mine-val">跟进账号注册进度；协调内部产研资源介入；同步推进云迁移报价</div></div>
+          </div>
+        </div>
+        <div class="wf-arrow"><div class="wf-arrow-line"></div></div>
+        <div class="wf-node">
+          <div class="wf-node-inner">
+            <div class="wf-node-step">下一步</div>
+            <div class="wf-node-title">POC 验收 · 商务</div>
+            <div class="wf-node-sub">验收标准 → 报价谈判</div>
+            <span class="wf-node-badge badge-next">待推进</span>
+          </div>
+          <div class="wf-tooltip">
+            <div class="tt-label">节点 4 — Close</div>
+            <div class="tt-row"><div class="tt-key">目标</div><div class="tt-val">POC 通过后进入商务谈判，确认 License 报价与云资源迁移方案</div></div>
+            <div class="tt-row"><div class="tt-key">待确认</div><div class="tt-val">验收标准定义；主动关怀功能落地时间；数据存储容量细节</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- 6. CONTRIBUTION -->
+<section class="sec reveal">
+  <div class="sec-head">
+    <div class="label">My Role</div>
+    <h2 class="sec-title">我在这个项目中承担的关键价值</h2>
+  </div>
+  <div class="contrib-grid">
+    <div class="contrib-item">
+      <div class="contrib-stripe s-ac"></div>
+      <div class="contrib-body">
+        <div class="contrib-title">技术场景化翻译 · 辅助方案讲解</div>
+        <div class="contrib-desc">在线下拜访中，将 VAD 增强、多模态情绪感知、主动任务引擎等技术名词，实时转化为老年用户的真实使用画面。主动在「主动关怀」模块做出即兴场景类比，让抽象的 AI 能力变得可感知，客户当场反应积极。</div>
+        <div class="contrib-outputs"><span class="cout">场景化技术讲解</span><span class="cout">即兴类比表达</span></div>
+      </div>
+    </div>
+    <div class="contrib-item">
+      <div class="contrib-stripe s-cy"></div>
+      <div class="contrib-body">
+        <div class="contrib-title">方案解读文章 · 独立撰写发布</div>
+        <div class="contrib-desc">基于本次拜访经验，独立撰写 RTC 多模态方案全链路解读文章，将方案架构各层（传输/AI/记忆/生态）全部业务化转译，整理 SA 讲解话术与决策逻辑。发布至内网后获得团队点赞与投币，并在团队内部进行了分享。</div>
+        <div class="contrib-outputs"><span class="cout">内网方案解读文章</span><span class="cout">话术知识沉淀</span></div>
+      </div>
+    </div>
+    <div class="contrib-item">
+      <div class="contrib-stripe s-or"></div>
+      <div class="contrib-body">
+        <div class="contrib-title">会议纪要整理 · 需求优先级提炼</div>
+        <div class="contrib-desc">当场记录 + 会后结合录音复盘，整理正式结构化纪要。重点不只是记录客户说了什么，更聚焦「为什么这样问」——如客户对延时追问两次，说明体验是首要决策因子。识别并标注了后续跟进的关键行动项。</div>
+        <div class="contrib-outputs"><span class="cout">结构化会议纪要</span><span class="cout">需求优先级判断</span></div>
+      </div>
+    </div>
+    <div class="contrib-item">
+      <div class="contrib-stripe s-gr"></div>
+      <div class="contrib-body">
+        <div class="contrib-title">推动 POC 启动 · 识别扩展商机</div>
+        <div class="contrib-desc">持续跟进账号注册进度，协调内部产研介入测试。同时识别并反馈「客户有从竞品云迁移意向」这一扩展商机线索，推动团队跟进迁移报价，从单项目扩展为更大的商机范围。</div>
+        <div class="contrib-outputs"><span class="cout">账号注册跟进</span><span class="cout">产研协调</span><span class="cout">云迁移商机识别</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- 7. RESULTS -->
+<section class="sec reveal">
+  <div class="sec-head">
+    <div class="label">Results & Impact</div>
+    <h2 class="sec-title">阶段成果与项目意义</h2>
+  </div>
+  <p class="body-copy" style="margin-bottom:18px;">项目尚未进入商务阶段，但已产生三个维度的阶段性价值。</p>
+  <div class="result-grid">
+    <div class="res-card">
+      <div class="res-card-from">对 客 户</div>
+      <div class="res-card-title">从「想做 AI 硬件」到 SDK 测试正式启动</div>
+      <div class="res-card-body">客户完成了对主流 AI 集成路径的比较评估，确认方案可行，进入账号注册和测试阶段——这是产品研发里程碑节点的关键推进。</div>
+    </div>
+    <div class="res-card">
+      <div class="res-card-from">对 方 案 方</div>
+      <div class="res-card-title">高潜 ISV 商机激活 + 云迁移附加线索</div>
+      <div class="res-card-body">客户进入 POC 阶段意味着 License 商机被激活，潜在 GMV 在百万元量级；同时识别出云迁移意向，打开了第二条商机线。</div>
+    </div>
+    <div class="res-card">
+      <div class="res-card-from">对 我 个 人</div>
+      <div class="res-card-title">跑通售前全链路，建立 SA 节奏感与知识体系</div>
+      <div class="res-card-body">第一次独立完成初访 → 跟进闭环 → 内网输出的完整流程，同时识别了自身在产品细节与 POC 推进节奏上的短板，形成具体的补强方向。</div>
+    </div>
+  </div>
+</section>
+
+<div class="hr"></div>
+
+<!-- 8. RETRO -->
+<section class="sec reveal">
+  <div class="sec-head">
+    <div class="label">Retrospective</div>
+    <h2 class="sec-title">三个真实挑战与复盘</h2>
+  </div>
+  <div class="retro-list">
+    <div class="retro-item r-red">
+      <div class="retro-head"><div class="retro-n">01</div><div class="retro-title">数据存储问题当场答不上来</div></div>
+      <div class="retro-body">
+        <div class="retro-col"><div class="retro-col-label l">发生了什么</div><p class="retro-text">客户追问对话数据存储容量上限和保存时长，我当时对这块产品细节不熟悉，无法给出准确答案，现场出现停顿。</p></div>
+        <div class="retro-col"><div class="retro-col-label r">处理方式与成长</div><p class="retro-text">请教同事后意识到：<strong>提前拉产研入会实时解答</strong>，比一个人独自覆盖所有知识盲区更专业。「不知道」不是失误，「没有机制兜底」才是——团队协作本身是 SA 能力的一部分。</p></div>
+      </div>
+    </div>
+    <div class="retro-item r-red">
+      <div class="retro-head"><div class="retro-n">02</div><div class="retro-title">POC 后续流程不熟悉，推进节奏不清晰</div></div>
+      <div class="retro-body">
+        <div class="retro-col"><div class="retro-col-label l">发生了什么</div><p class="retro-text">账号开通后，不清楚测试验收标准是什么、谁来跟进 SDK 集成、什么条件下进入商务谈判。节奏感缺失影响了主动推进的自信。</p></div>
+        <div class="retro-col"><div class="retro-col-label r">成长方向</div><p class="retro-text">SA 的完整能力不只是「懂方案」，还包括<strong>掌握售前全流程的节奏感</strong>。初访 → 账号开通 → POC 验收 → 商务谈判，每个节点的目标、推进方式、内部协调路径都需要系统积累。</p></div>
+      </div>
+    </div>
+    <div class="retro-item r-or">
+      <div class="retro-head"><div class="retro-n">★</div><div class="retro-title">核心判断：功能未上线，如何应对客户最看重的那个需求</div></div>
+      <div class="retro-body">
+        <div class="retro-col"><div class="retro-col-label l">两难困境</div><p class="retro-text">客户最看重的「主动关怀」在拜访时仍是规划功能，尚未落地。<strong>过度承诺</strong>导致 POC 失败信任崩塌；<strong>直接说没有</strong>则客户认为方案不成熟当场流失。这是售前最常见也最难处理的期望管理困境。</p></div>
+        <div class="retro-col"><div class="retro-col-label r">观察到的处理方式</div><p class="retro-text">坦诚说明规划上线时间 → 展示「定时提醒」作为当前可用的过渡方案 → 给出明确测试安排承诺。<strong>诚实 + 过渡方案 + 时间节点</strong>，三者缺一不可。这是我在这个项目里对 SA 角色理解最深的一处。</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="key-learn">
+    <div class="kl-label">Core Learning</div>
+    <p class="kl-quote">售前不是销售。销售可以夸大，但 SA 是客户技术决策链上信任的建立者——短期的诚实比长期的失信成本低得多。这个判断，不是从产品手册里学来的，是在真实客户的问题里踩出来的。</p>
+  </div>
+</section>
+
+</main>
+
+</div>
+
+<script>
+
+/* ── THEME TOGGLE ── */
+function toggleTheme(){
+  const html=document.documentElement;
+  const isLight=html.classList.toggle('light');
+  document.getElementById('theme-label').textContent=isLight?'暗黑':'明亮';
+  document.getElementById('icon-dark').style.display=isLight?'none':'block';
+  document.getElementById('icon-light').style.display=isLight?'block':'none';
+  localStorage.setItem('theme',isLight?'light':'dark');
+}
+(function(){
+  const saved=localStorage.getItem('theme');
+  if(saved==='light'){
+    document.documentElement.classList.add('light');
+    document.addEventListener('DOMContentLoaded',()=>{
+      const lbl=document.getElementById('theme-label');
+      const idark=document.getElementById('icon-dark');
+      const ilight=document.getElementById('icon-light');
+      if(lbl)lbl.textContent='暗黑';
+      if(idark)idark.style.display='none';
+      if(ilight)ilight.style.display='block';
+    });
+  }
+})();
+
+/* ── SCROLL REVEAL ── */
+(function(){
+  const els=document.querySelectorAll('.reveal');
+  if(!els.length)return;
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+  },{threshold:0.07});
+  els.forEach(el=>io.observe(el));
+})();
+
+/* ── ARCH DIAGRAM TOOLTIP ── */
+const NODES={
+  mic:{label:'端侧层 · 输入',title:'用户语音输入',tech:'麦克风采集 · PCM 音频格式',body:'老人对设备说话，麦克风采集原始音频，转换为 PCM 格式后交由 SDK 预处理。低成本嵌入式芯片即可完成这一步，无需高端处理器。',biz:'让设备门槛归零——老人只需开口说话，不需要学习任何操作界面。'},
+  sdk:{label:'端侧层 · SDK',title:'端侧多模态互动 SDK',tech:'集成层 · 3A 音频处理 · <300K 包体',body:'SDK 是方案的端侧接入层。包体极小（<300K），支持乐鑫 ESP32 等低成本 RTOS 芯片，1天可完成基础接入。内置 3A 音频预处理（回声消除、降噪、自动增益）。',biz:'客户现有芯片无需更换，零增加硬件 BOM 成本，即可拥有云端大模型能力——这是「软件定义硬件能力」。'},
+  vad:{label:'端侧层 · 检测',title:'VAD 语音活动检测',tech:'Voice Activity Detection · 精准判断说话结束时机',body:'VAD 检测用户何时停止说话，立即将音频发往云端处理，而不是等待固定的静音时间。减少主观等待感，是降低延时感知的关键一环。',biz:'老人说完话，设备立刻知道并响应，不会傻等几秒——让交互更像和真人说话。'},
+  audio3a:{label:'端侧层 · 音频增强',title:'7 大音频增强服务',tech:'AI 降噪 · 回声消除 · 声纹识别 · 智能打断',body:'7 大音频增强覆盖完整链路：AI 降噪（消除环境噪音）、声音增益（自动放大人声）、回声消除（防止啸叫）、声纹识别（只响应主人）、VAD 检测、智能打断（全双工交互基础）、全景声音效。',biz:'嘈杂家庭环境（电视声、风扇声）下，设备仍能准确听清老人说话。「听得清」是比「听得懂」更基础的体验要素。'},
+  rtn:{label:'传输层 · 核心通道',title:'实时传输网络（RTN）',tech:'端到端音频 ≤1.3s · 语音打断 <0.8s · 双向传输',body:'RTN 是整套方案的「血管」——保证音频、视频、互动指令在云端与设备端之间毫秒级双向传输。全链路端到端音频延时低至 1.3s（实测约 1.5s 稳定），语音打断响应低于 0.8s。',biz:'1.3s 延时是用户感知「活人在说话」的生死线。开源拼接方案往往 3-4 秒，那是「复读机」，不是「伙伴」。'},
+  intent:{label:'云端层 · 路由',title:'意图识别（分流路由器）',tech:'规则引擎 vs LLM 分流 · 降本 + 提速',body:'意图识别是云端的「分诊台」。简单指令（调大音量、播放音乐）直接走规则引擎，无需调用大模型——既省钱又更快。只有复杂对话才路由给 LLM 思考。',biz:'为客户节省 AI 调用成本，同时提升简单指令的响应速度。「不把每件事都交给大模型」是降本的核心思路。'},
+  llm:{label:'云端层 · 大脑',title:'大语言模型（LLM）',tech:'LLM / RAG / Agent · 支持第三方模型替换',body:'核心对话与推理在云端大模型完成。支持标准 OpenAI 接口，客户可以替换为自己偏好的第三方模型（无需被特定厂商锁定）。RAG 知识库让 AI 能回答企业私有知识。',biz:'「开放性」是关键卖点——客户不担心厂商绑定（Vendor Lock-in），用自己熟悉的模型也能接入完整的传输与音频能力。'},
+  memory:{label:'云端层 · 记忆与主动',title:'记忆系统 + 主动任务引擎',tech:'长短期记忆 · 用户画像 · 情绪感知 · 定时触发',body:'长期记忆存储用户画像（姓名、健康状况、生活规律、重要事件）。主动任务引擎基于定时器或情感分析结果，主动向设备下发关怀指令，实现「设备主动找老人说话」。',biz:'这是本项目最核心的差异化功能。设备能记住老人之前说过「胸口不舒服」，第二天主动问候——从「工具」进化为「有温度的陪伴伙伴」。'},
+  asrtts:{label:'云端层 · 语音处理',title:'ASR 语音识别 · TTS 语音合成',tech:'语音转文字 · 100+ 音色 · 流式推理',body:'ASR 把老人说的话实时转为文字送入大模型；TTS 把大模型的文字回复转为自然语音输出。支持 100+ 种音色，可进行音色复刻（用家人声音定制专属 AI）。流式推理保证低延时输出。',biz:'「音色」是情感连接的关键。用老人熟悉的声音说话（如子女音色），能大幅提升陪伴感和信任感。'},
+  output:{label:'输出层 · 回路闭合',title:'语音回传播放 · 设备端输出',tech:'RTN 回传 → SDK 解码 → 扬声器播放',body:'LLM 生成的文字经 TTS 合成为音频，通过 RTN 低延时回传至端侧 SDK，SDK 解码后驱动扬声器播放。至此完成一次完整的多模态交互闭环。从老人开口说话到听到 AI 回应，全程约 1.3-1.5 秒。',biz:'整套链路对老人完全透明——他们只感受到「和一个很快就能回答的朋友在说话」，感受不到背后云端处理的存在。'},
+};
+
+const tooltip=document.getElementById('arch-tooltip');
+const svg=document.getElementById('arch-svg');
+
+function showTooltip(id,e){
+  const n=NODES[id];if(!n)return;
+  document.getElementById('att-label').textContent=n.label;
+  document.getElementById('att-title').textContent=n.title;
+  document.getElementById('att-tech').textContent=n.tech;
+  document.getElementById('att-body').textContent=n.body;
+  document.getElementById('att-biz').textContent=n.biz;
+  const canvasRect=archCanvas.getBoundingClientRect();
+  const x=e.clientX-canvasRect.left;
+  const y=e.clientY-canvasRect.top;
+  let left=x-130;
+  if(left<8)left=8;
+  if(left+268>canvasRect.width)left=canvasRect.width-276;
+  tooltip.style.left=left+'px';
+  if(id==='output'){
+    tooltip.classList.add('upward');
+    tooltip.style.top='auto';
+    tooltip.style.bottom=(canvasRect.height-y+20)+'px';
+  }else{
+    tooltip.classList.remove('upward');
+    tooltip.style.bottom='auto';
+    tooltip.style.top=(y+20)+'px';
+  }
+  tooltip.classList.add('visible');
+}
+function hideTooltip(){tooltip.classList.remove('visible');}
+
+svg.querySelectorAll('.arch-node').forEach(g=>{
+  const id=g.getAttribute('data-id');
+  g.style.cursor='pointer';
+  g.addEventListener('mouseenter',e=>{
+    const rect=g.querySelector('rect');
+    if(rect){rect.setAttribute('stroke-width','1.5');rect.style.filter='brightness(1.15)';}
+    showTooltip(id,e);
+  });
+  g.addEventListener('mousemove',e=>showTooltip(id,e));
+  g.addEventListener('mouseleave',()=>{
+    const rect=g.querySelector('rect');
+    if(rect){rect.removeAttribute('stroke-width');rect.style.filter='';}
+    hideTooltip();
+  });
+});
+
+/* Position tooltip relative to arch-canvas */
+const archCanvas=document.querySelector('.arch-canvas');
+if(archCanvas)archCanvas.style.position='relative';
+if(tooltip.parentElement!==archCanvas&&archCanvas)archCanvas.appendChild(tooltip);
+</script>
+</body>
+</html>
